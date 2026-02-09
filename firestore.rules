@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Regras para a coleção de usuários
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Regras para a coleção de avaliações
+    match /evaluations/{evaluationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Regras para configurações do sistema
+    match /settings/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Regras para unidades
+    match /units/{unitId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
