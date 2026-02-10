@@ -362,44 +362,32 @@ const Admin: React.FC = () => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <aside className="lg:col-span-2 space-y-1">
-          <nav className="space-y-1">
-            <button
-              onClick={() => setActiveTab('settings')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${activeTab === 'settings' ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-white'}`}
-            >
-              <span className="material-icons text-sm">settings</span>
-              Configurações
-            </button>
-            <button
-              onClick={() => setActiveTab('units')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${activeTab === 'units' ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-white'}`}
-            >
-              <span className="material-icons text-sm">map</span>
-              Unidades
-            </button>
-            <button
-              onClick={() => setActiveTab('docs')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${activeTab === 'docs' ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-white'}`}
-            >
-              <span className="material-icons text-sm">folder_shared</span>
-              Doc da contratação
-            </button>
-            <button
-              onClick={() => setActiveTab('alerts')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all ${activeTab === 'alerts' ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-white'}`}
-            >
-              <span className="material-icons text-sm">notification_important</span>
-              Alertas do Sistema
-            </button>
+      <div className="flex flex-col lg:flex-row gap-6">
+        <aside className="lg:w-64 flex-shrink-0">
+          <nav className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible pb-2 lg:pb-0 gap-1 lg:gap-2 no-scrollbar scroll-smooth">
+            {[
+              { id: 'settings', icon: 'settings', label: 'Configurações' },
+              { id: 'units', icon: 'map', label: 'Unidades' },
+              { id: 'docs', icon: 'folder_shared', label: 'Doc da contratação' },
+              { id: 'alerts', icon: 'notification_important', label: 'Alertas do Sistema' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-shrink-0 flex items-center gap-3 px-4 py-3 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${activeTab === tab.id ? 'bg-primary text-white shadow-md' : 'text-slate-600 hover:bg-white'}`}
+              >
+                <span className="material-icons text-sm">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
           </nav>
         </aside>
 
-        <div className="lg:col-span-10">
+        <div className="flex-1 min-w-0">
           {activeTab === 'settings' && (
-            <div className="grid grid-cols-12 gap-6">
-              <section className="col-span-12 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+              <section className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
                   <h2 className="font-bold flex items-center gap-2">
                     <span className="material-icons text-primary text-lg">mail</span>
@@ -445,11 +433,11 @@ const Admin: React.FC = () => {
                 </div>
               </section>
 
-              <section className="col-span-12 md:col-span-7 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <section className="col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="px-6 py-4 bg-slate-50/50 border-b border-slate-100">
                   <h2 className="font-bold flex items-center gap-2"><span className="material-icons text-primary">assignment</span> Configuração de Contrato</h2>
                 </div>
-                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <label className="text-[10px] font-bold text-slate-400 uppercase">Valor Anual</label>
                     <input className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm" value={contractValue} onChange={e => setContractValue(formatToBRL(e.target.value))} />
@@ -477,7 +465,8 @@ const Admin: React.FC = () => {
                 </div>
               </section>
 
-              <section className="col-span-12 md:col-span-5 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <section className="col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
                 <div className="px-6 py-4 bg-slate-50/50 border-b border-slate-100">
                   <h2 className="font-bold flex items-center gap-2"><span className="material-icons text-primary">payments</span> Tarifas por m²</h2>
                 </div>
@@ -535,7 +524,7 @@ const Admin: React.FC = () => {
                   </form>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {units.map(u => (
                   <div key={u.id} className="bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-center">
                     <div>
@@ -546,6 +535,7 @@ const Admin: React.FC = () => {
                   </div>
                 ))}
               </div>
+
             </div>
           )}
 
@@ -554,7 +544,7 @@ const Admin: React.FC = () => {
               <header className="bg-white p-6 rounded-xl border border-slate-200">
                 <h2 className="text-xl font-bold flex items-center gap-2"><span className="material-icons text-primary">folder_shared</span> Documentação da Contratação</h2>
               </header>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {(['nf', 'doc'] as const).map(type => (
                   <section key={type} className="bg-white rounded-xl border border-slate-200 flex flex-col min-h-[400px]">
                     <div className="p-4 border-b bg-slate-50/50 font-bold flex items-center gap-2">
@@ -581,6 +571,7 @@ const Admin: React.FC = () => {
                   </section>
                 ))}
               </div>
+
             </div>
           )}
 

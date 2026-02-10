@@ -116,7 +116,7 @@ const ContractDetails: React.FC = () => {
                     <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded text-[10px] font-black uppercase">Vigente</span>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-[10px] font-bold uppercase text-slate-400 tracking-widest block mb-1">Gestor Principal</label>
                     <div className="flex items-center gap-2">
@@ -136,6 +136,7 @@ const ContractDetails: React.FC = () => {
                     </div>
                   </div>
                 </div>
+
               </div>
             </div>
           </section>

@@ -123,7 +123,7 @@ const Dashboard: React.FC = () => {
             <div className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-slate-200"></span> Pendente</div>
           </div>
         </div>
-        <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
+        <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-3">
           {units.map((unit, i) => {
             const completed = isUnitCompleted(unit.name);
             return (
@@ -143,13 +143,14 @@ const Dashboard: React.FC = () => {
             );
           })}
         </div>
+
       </section>
 
       {/* Contract Warning Bar */}
       {contractInfo && (
-        <div className="bg-primary text-white p-4 rounded-xl shadow-lg flex items-center justify-between border-l-8 border-primary-dark">
+        <div className="bg-primary text-white p-4 rounded-xl shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-l-8 border-primary-dark">
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="material-icons">info</span>
             </div>
             <div>
@@ -159,6 +160,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       )}
+
 
       {/* REAL System Alerts from Admin */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

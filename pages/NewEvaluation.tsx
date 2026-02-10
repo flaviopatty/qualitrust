@@ -383,19 +383,19 @@ const NewEvaluation: React.FC = () => {
 
   return (
     <div className={`max-w-5xl mx-auto pb-24 animate-in slide-in-from-right-4 duration-500 ${isView ? 'pointer-events-none opacity-90' : ''}`}>
-      <header className="mb-8 flex justify-between items-center no-print">
+      <header className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
             {isView ? 'Visualizar Avaliação' : isEdit ? 'Editar Avaliação' : 'Nova Avaliação'}
           </h1>
-          <p className="text-slate-500">
+          <p className="text-slate-500 text-sm">
             {isView ? 'Detalhes da vistoria técnica realizada.' : isEdit ? 'Atualize os dados da vistoria técnica.' : 'Preencha os dados da vistoria técnica.'}
           </p>
         </div>
         {isView && (
           <button
             onClick={() => window.print()}
-            className="pointer-events-auto flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-bold hover:bg-slate-200"
+            className="pointer-events-auto flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg font-bold hover:bg-slate-200"
           >
             <span className="material-icons text-sm">print</span>
             Imprimir
@@ -620,9 +620,9 @@ const NewEvaluation: React.FC = () => {
               { id: 'damageRecovered', q: 'Houve dano não recuperado na estrutura do imóvel?' },
               { id: 'proofDelivered', q: 'Houve a entrega comprovante de aplicação após o serviço?' }
             ].map((item) => (
-              <div key={item.id} className="flex justify-between items-center py-2 border-b border-slate-50 last:border-0">
+              <div key={item.id} className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 gap-2 border-b border-slate-50 last:border-0">
                 <span className="text-sm font-medium text-slate-700">{item.q}</span>
-                <div className="flex gap-4">
+                <div className="flex gap-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -669,9 +669,9 @@ const NewEvaluation: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-between items-start py-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start py-3 gap-2">
                 <span className="text-sm font-medium text-slate-700 mt-1">A visita seguiu o cronograma acordado?</span>
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col sm:items-end gap-2">
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" checked={disinsectizationEval.followedSchedule === true} onChange={() => setDisinsectizationEval(prev => ({ ...prev, followedSchedule: true }))} className="text-primary focus:ring-primary" />
@@ -696,7 +696,7 @@ const NewEvaluation: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center py-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 gap-2">
                 <span className="text-sm font-medium text-slate-700">Armadilhas luminosas avaliadas e mantidas?</span>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -766,9 +766,9 @@ const NewEvaluation: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-between items-start py-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start py-2 gap-2">
                 <span className="text-sm font-medium text-slate-700 mt-1">A visita seguiu o cronograma acordado?</span>
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-col sm:items-end gap-2">
                   <div className="flex gap-4">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input type="radio" checked={deratizationEval.followedSchedule === true} onChange={() => setDeratizationEval(prev => ({ ...prev, followedSchedule: true }))} className="text-primary focus:ring-primary" />
@@ -793,7 +793,7 @@ const NewEvaluation: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-between items-center py-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 gap-2">
                 <span className="text-sm font-medium text-slate-700">Armadilhas avaliadas e mantidas?</span>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
