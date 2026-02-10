@@ -305,10 +305,21 @@ const Admin: React.FC = () => {
       }
     } catch (error: any) {
       console.error("Error uploading: ", error);
-      alert(`Erro ao enviar arquivo: ${error.message || 'Erro desconhecido'}. Por favor, verifique se o Firebase Storage está ativado no console do Firebase e se as regras de permissão permitem o upload.`);
+      let errorMessage = error.message || 'Erro desconhecido';
+
+      if (error.code === 'storage/unauthorized') {
+        errorMessage = 'Usuário sem permissão. Verifique as regras do Firebase Storage.';
+      } else if (error.code === 'storage/retry-limit-exceeded') {
+        errorMessage = 'Tempo limite excedido. Verifique sua conexão.';
+      } else if (error.code === 'storage/object-not-found') {
+        errorMessage = 'Bucket de armazenamento não encontrado. Verifique seu arquivo .env.local.';
+      }
+
+      alert(`Erro ao enviar arquivo: ${errorMessage}\n\nCódigo: ${error.code || 'N/A'}\nPor favor, verifique se o Firebase Storage está ativado no console e se as regras de permissão permitem o upload.`);
     } finally {
       setUploading(null);
     }
+
   };
 
   const handleDeleteDoc = async (hdoc: HiringDoc) => {
@@ -514,16 +525,124 @@ const Admin: React.FC = () => {
                 <button onClick={() => { resetCurrentUnit(); setShowUnitForm(true); }} className="px-4 py-2 bg-primary text-white rounded-lg font-bold text-sm">Nova Unidade</button>
               </header>
               {showUnitForm && (
-                <div className="bg-white p-6 rounded-xl border border-slate-200">
-                  <form onSubmit={handleSaveUnit} className="space-y-4">
-                    <input className="w-full px-4 py-2 border border-slate-200 rounded-lg" placeholder="Nome" value={currentUnit.name} onChange={e => setCurrentUnit({ ...currentUnit, name: e.target.value })} />
-                    <div className="flex justify-end gap-2">
-                      <button type="button" onClick={() => setShowUnitForm(false)} className="px-4 py-2 border rounded-lg">Cancelar</button>
-                      <button type="submit" className="px-4 py-2 bg-primary text-white rounded-lg">Salvar</button>
+                <div className="bg-white p-6 rounded-xl border border-slate-200 animate-in slide-in-from-top-2 duration-300">
+                  <form onSubmit={handleSaveUnit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Nome da Unidade</label>
+                        <input
+                          required
+                          className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                          placeholder="Ex: Tribunal de Justiça - Sede"
+                          value={currentUnit.name}
+                          onChange={e => setCurrentUnit({ ...currentUnit, name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Metragem (m²)</label>
+                        <input
+                          required
+                          type="number"
+                          className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                          placeholder="Ex: 500"
+                          value={currentUnit.squareMeters}
+                          onChange={e => setCurrentUnit({ ...currentUnit, squareMeters: e.target.value })}
+                        />
+                      </div>
+                      <div className="md:col-span-3">
+                        <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Endereço Completo</label>
+                        <input
+                          required
+                          className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                          placeholder="Rua, Número, Bairro, Cidade - UF"
+                          value={currentUnit.address}
+                          onChange={e => setCurrentUnit({ ...currentUnit, address: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4 border-t border-slate-100">
+                      {/* Fiscal Titular */}
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-primary flex items-center gap-2">
+                          <span className="material-icons text-lg">person</span>
+                          Fiscal Titular
+                        </h3>
+                        <div className="grid grid-cols-1 gap-3">
+                          <input
+                            className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                            placeholder="Nome do Fiscal"
+                            value={currentUnit.titular.name}
+                            onChange={e => setCurrentUnit({ ...currentUnit, titular: { ...currentUnit.titular, name: e.target.value } })}
+                          />
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                              placeholder="E-mail"
+                              value={currentUnit.titular.email}
+                              onChange={e => setCurrentUnit({ ...currentUnit, titular: { ...currentUnit.titular, email: e.target.value } })}
+                            />
+                            <input
+                              className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                              placeholder="Ramal/Telefone"
+                              value={currentUnit.titular.ramal}
+                              onChange={e => setCurrentUnit({ ...currentUnit, titular: { ...currentUnit.titular, ramal: e.target.value } })}
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Fiscal Substituto */}
+                      <div className="space-y-4">
+                        <h3 className="text-sm font-bold text-slate-600 flex items-center gap-2">
+                          <span className="material-icons text-lg">person_outline</span>
+                          Fiscal Substituto
+                        </h3>
+                        <div className="grid grid-cols-1 gap-3">
+                          <input
+                            className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                            placeholder="Nome do Substituto"
+                            value={currentUnit.substituto.name}
+                            onChange={e => setCurrentUnit({ ...currentUnit, substituto: { ...currentUnit.substituto, name: e.target.value } })}
+                          />
+                          <div className="grid grid-cols-2 gap-2">
+                            <input
+                              className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                              placeholder="E-mail"
+                              value={currentUnit.substituto.email}
+                              onChange={e => setCurrentUnit({ ...currentUnit, substituto: { ...currentUnit.substituto, email: e.target.value } })}
+                            />
+                            <input
+                              className="w-full px-4 py-2 border border-slate-200 rounded-lg text-sm"
+                              placeholder="Ramal/Telefone"
+                              value={currentUnit.substituto.ramal}
+                              onChange={e => setCurrentUnit({ ...currentUnit, substituto: { ...currentUnit.substituto, ramal: e.target.value } })}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={() => setShowUnitForm(false)}
+                        className="px-6 py-2 border border-slate-300 rounded-lg text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={saving}
+                        className="px-8 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all disabled:opacity-50"
+                      >
+                        {saving ? 'Gravando...' : currentUnit.id ? 'Atualizar Unidade' : 'Criar Unidade'}
+                      </button>
                     </div>
                   </form>
                 </div>
               )}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {units.map(u => (
                   <div key={u.id} className="bg-white p-4 rounded-xl border border-slate-200 flex justify-between items-center">
@@ -531,7 +650,15 @@ const Admin: React.FC = () => {
                       <p className="font-bold">{u.name}</p>
                       <p className="text-xs text-slate-500">{u.address}</p>
                     </div>
-                    <button onClick={() => u.id && handleDeleteUnit(u.id)} className="text-red-400"><span className="material-icons">delete</span></button>
+                    <div className="flex items-center gap-1">
+                      <button onClick={() => { setCurrentUnit(u); setShowUnitForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="p-2 text-slate-400 hover:text-primary transition-colors" title="Editar Unidade">
+                        <span className="material-icons text-sm">edit</span>
+                      </button>
+                      <button onClick={() => u.id && handleDeleteUnit(u.id)} className="p-2 text-slate-400 hover:text-red-500 transition-colors" title="Excluir Unidade">
+                        <span className="material-icons text-sm">delete</span>
+                      </button>
+                    </div>
+
                   </div>
                 ))}
               </div>
